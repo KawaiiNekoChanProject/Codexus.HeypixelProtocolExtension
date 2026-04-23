@@ -26,7 +26,6 @@ public static class NbtExtensions
     
     public static Nbt ReadNbtBody(this IByteBuffer buffer, Nbt nbt, uint depth = 0)
     {
-        var i = 0;
         while (true)
         {
             var nextType = buffer.ReadByte();
