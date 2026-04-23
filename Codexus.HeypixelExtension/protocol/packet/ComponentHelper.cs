@@ -1,7 +1,8 @@
 using System.Text;
+using Codexus.HeypixelExtension.protocol.nbt;
 using DotNetty.Buffers;
 
-namespace Codexus.HeypixelExtension.packet;
+namespace Codexus.HeypixelExtension.protocol.packet;
 
 public static class ComponentHelper
 {
@@ -31,7 +32,7 @@ public static class ComponentHelper
         0x74, 0x79, 0x70, 0x65, 0x00, 0x04, 0x74, 0x65, 0x78, 0x74, 0x00
     ];
     
-    public static byte[] Text(string message)
+    public static Nbt Text(string message)
     {
         var byteMessage = Encoding.UTF8.GetBytes(message);
 
@@ -40,11 +41,11 @@ public static class ComponentHelper
         buffer.WriteBytes(TextPrefix);
         buffer.WriteShort(byteMessage.Length);
         buffer.WriteBytes(byteMessage);
-
-        return buffer.ToArray();
+        
+        return buffer.ReadNbt();
     }
     
-    public static byte[] TextClick(string message, string command)
+    public static Nbt TextClick(string message, string command)
     {
         var byteCommand = Encoding.UTF8.GetBytes(command);
         var byteMessage = Encoding.UTF8.GetBytes(message);
@@ -59,7 +60,7 @@ public static class ComponentHelper
         buffer.WriteBytes(byteMessage);
         buffer.WriteBytes(TextClickSuffix);
 
-        return buffer.ToArray();
+        return buffer.ReadNbt();
     }
     
     private static byte[] ToArray(this IByteBuffer buffer)
