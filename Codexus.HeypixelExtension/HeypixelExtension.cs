@@ -35,8 +35,6 @@ public class HeypixelExtension : IPlugin
     {
         if (connection.State != EnumConnectionState.Play) return;
         
-        Log.Information(identifier);
-        Log.Information(Convert.ToBase64String(payload));
         if (identifier == "floodgate:form" && payload.Length > 3)
         {
             var raw = Encoding.UTF8.GetString(payload, 3, payload.Length - 3);
@@ -46,6 +44,7 @@ public class HeypixelExtension : IPlugin
             windowRaw[1] = payload[2];
             var windowId = FloodgateFormId.GetFormId(windowRaw);
             
+            Log.Debug("Id: {0} Detail: {1}", windowId, raw);
             if (payload[0] == 0x00)
             {
                 var form = JsonSerializer.Deserialize<Form>(raw)!;
