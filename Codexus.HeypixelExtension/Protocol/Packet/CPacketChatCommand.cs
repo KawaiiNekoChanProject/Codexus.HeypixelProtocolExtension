@@ -3,7 +3,7 @@ using Codexus.Development.SDK.Enums;
 using Codexus.Development.SDK.Extensions;
 using Codexus.Development.SDK.Manager;
 using Codexus.Development.SDK.Packet;
-using Codexus.HeypixelExtension.protocol.events;
+using Codexus.HeypixelExtension.Protocol.Events;
 using DotNetty.Buffers;
 
 namespace Codexus.HeypixelExtension.Protocol.Packet;
