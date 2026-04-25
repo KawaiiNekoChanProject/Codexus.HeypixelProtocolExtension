@@ -6,9 +6,4 @@ namespace Codexus.HeypixelExtension.Protocol.Events;
 public class EventPlayerSendCommand(GameConnection connection) : EventArgsBase(connection)
 {
     public string Command = "";
-
-    public void Cancel()
-    {
-        Command = "";
-    }
 }

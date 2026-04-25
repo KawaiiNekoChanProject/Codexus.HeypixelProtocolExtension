@@ -7,7 +7,7 @@ public static class FloodgateFormId
         return (short)((data[0] << 8) | data[1]);
     }
     
-    public static short GetFormIdFromPayloadRaw(byte[] data)
+    public static short GetFormIdFromPayload(byte[] data)
     {
         var windowRaw = new byte[2];
         windowRaw[0] = data[1];
