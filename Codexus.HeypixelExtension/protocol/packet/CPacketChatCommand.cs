@@ -1,17 +1,15 @@
-﻿using System.Text;
-using Codexus.Base1200.Plugin.Packet.Play.Client;
-using Codexus.Development.SDK.Connection;
+﻿using Codexus.Development.SDK.Connection;
 using Codexus.Development.SDK.Enums;
 using Codexus.Development.SDK.Extensions;
+using Codexus.Development.SDK.Manager;
 using Codexus.Development.SDK.Packet;
-using Codexus.HeypixelExtension.protocol.packet.helper;
-using Codexus.HeypixelExtension.utils;
+using Codexus.HeypixelExtension.protocol.events;
 using DotNetty.Buffers;
 
 namespace Codexus.HeypixelExtension.protocol.packet;
 
 [RegisterPacket(EnumConnectionState.Play, EnumPacketDirection.ServerBound, [13, 4], [EnumProtocolVersion.V1200, EnumProtocolVersion.V1206 ])]
-public class CPacketChatMessageSystem : IPacket
+public class CPacketChatCommand : IPacket
 {
     private string Command { get; set; } = "";
 		
@@ -29,24 +27,14 @@ public class CPacketChatMessageSystem : IPacket
 
     public bool HandlePacket(GameConnection connection)
     {
-        if (!Command.StartsWith("floodgate:click ")) return false;
-
-        var param = Command.Replace("floodgate:click", "").Trim().Split(" ");
-        if (param.Length != 2) return false;
+        var e = new EventPlayerSendCommand(connection)
+        {
+            Command = Command
+        };
+        EventManager.Instance.TriggerEvent("base_1200_extra", e);
+        Command = e.Command;
         
-        connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
-        {
-            Content = MessageBuilder.Builder().Text("§a执行成功").Build(),
-            Overlay = false
-        });
-        connection.ServerChannel!.WriteAndFlushAsync(new CPacketPluginMessage
-        {
-            Identifier = "floodgate:form",
-            Payload = FloodgateFormId.ToFormId(short.Parse(param[0]))
-                .Concat(Encoding.UTF8.GetBytes(param[1]))
-                .ToArray()
-        });
-        return true;
+        return Command.Length != 0;
     }
 
 }
