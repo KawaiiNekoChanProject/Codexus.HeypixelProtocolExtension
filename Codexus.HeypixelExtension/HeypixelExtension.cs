@@ -7,6 +7,7 @@ using Codexus.Development.SDK.Manager;
 using Codexus.Development.SDK.Plugin;
 using Codexus.HeypixelExtension.entity;
 using Codexus.HeypixelExtension.protocol.packet;
+using Codexus.HeypixelExtension.protocol.packet.helper;
 using Codexus.HeypixelExtension.utils;
 using Serilog;
 
@@ -34,84 +35,87 @@ public class HeypixelExtension : IPlugin
     private static void HandlePluginMessageGeneric(string identifier, byte[] payload, GameConnection connection)
     {
         if (connection.State != EnumConnectionState.Play) return;
+        if (identifier != "floodgate:form" || payload.Length <= 3) return;
         
-        if (identifier == "floodgate:form" && payload.Length > 3)
+        var raw = Encoding.UTF8.GetString(payload, 3, payload.Length - 3);
+            
+        var windowRaw = new byte[2];
+        windowRaw[0] = payload[1];
+        windowRaw[1] = payload[2];
+        var windowId = FloodgateFormId.GetFormId(windowRaw);
+            
+        Log.Debug("Id: {0} Detail: {1}", windowId, raw);
+        switch (payload[0])
         {
-            var raw = Encoding.UTF8.GetString(payload, 3, payload.Length - 3);
-            
-            var windowRaw = new byte[2];
-            windowRaw[0] = payload[1];
-            windowRaw[1] = payload[2];
-            var windowId = FloodgateFormId.GetFormId(windowRaw);
-            
-            Log.Debug("Id: {0} Detail: {1}", windowId, raw);
-            if (payload[0] == 0x00)
-            {
+            case 0x00:
                 var form = JsonSerializer.Deserialize<Form>(raw)!;
             
                 connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
                 {
-                    Content = ComponentHelper.Text("§7>§r " + form.Title),
+                    Content = MessageBuilder.Builder()
+                        .Text("§7>§r " + form.Title)
+                        .OnHover(OnHover.ShowText("§7容器序号: §b" + windowId))
+                        .Build(),
                     Overlay = false
                 });
                 connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
                 {
-                    Content = ComponentHelper.Text(form.Content),
+                    Content = MessageBuilder.Builder().Text(form.Content).Build(),
                     Overlay = false
                 });
-            
-
+                    
                 for (var i = 0; i < form.Buttons.Count; i++)
                 {
                     var button = form.Buttons[i];
 
                     connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
                     {
-                        Content = ComponentHelper.TextClick(
-                            "§7[" + button.Text.Replace("§l", "").Replace("\n", " ") + "§7]", 
-                            "§7点击执行选项: §b" + i,
-                            "/floodgate:click " + windowId + " " + i
-                        ),
+                        Content = MessageBuilder.Builder()
+                            .Text("§7[" + button.Text.Replace("§l", "").Replace("\n", " ") + "§7]")
+                            .OnHover(OnHover.ShowText("§7点击执行选项: §b" + i))
+                            .OnClick(OnClick.RunCommand("/floodgate:click " + windowId + " " + i))
+                            .Build(),
                         Overlay = false
                     });
                 }
-            }
-            if (payload[0] == 0x01)
-            {
+                break;
+            case 0x01:
                 var modal = JsonSerializer.Deserialize<Modal>(raw)!;
             
                 connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
                 {
-                    Content = ComponentHelper.Text("§7>§r " + modal.Title),
+                    Content = MessageBuilder.Builder()
+                        .Text("§7>§r " + modal.Title)
+                        .OnHover(OnHover.ShowText("§7容器序号: §b" + windowId))
+                        .Build(),
                     Overlay = false
                 });
                 connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
                 {
-                    Content = ComponentHelper.Text(modal.Content),
+                    Content = MessageBuilder.Builder().Text(modal.Content).Build(),
                     Overlay = false
                 });
 
                 connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
                 {
-                    Content = ComponentHelper.TextClick(
-                        "§7[" + modal.Button1.Replace("§l", "").Replace("\n", " ") + "§7]", 
-                        "§7点击执行选项: §a是",
-                        "/floodgate:click " + windowId + " true"
-                    ),
+                    Content = MessageBuilder.Builder()
+                        .Text("§7[" + modal.Button1.Replace("§l", "").Replace("\n", " ") + "§7]")
+                        .OnHover(OnHover.ShowText("§7点击执行选项: §a是"))
+                        .OnClick(OnClick.RunCommand("/floodgate:click " + windowId + " true"))
+                        .Build(),
                     Overlay = false
                 });
                 
                 connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
                 {
-                    Content = ComponentHelper.TextClick(
-                        "§7[" + modal.Button2.Replace("§l", "").Replace("\n", " ") + "§7]", 
-                        "§7点击执行选项: §c否",
-                        "/floodgate:click " + windowId + " false"
-                    ),
+                    Content = MessageBuilder.Builder()
+                        .Text("§7[" + modal.Button2.Replace("§l", "").Replace("\n", " ") + "§7]")
+                        .OnHover(OnHover.ShowText("§7点击执行选项: §a否"))
+                        .OnClick(OnClick.RunCommand("/floodgate:click " + windowId + " false"))
+                        .Build(),
                     Overlay = false
                 });
-            }
-
+                break;
         }
     }
 
