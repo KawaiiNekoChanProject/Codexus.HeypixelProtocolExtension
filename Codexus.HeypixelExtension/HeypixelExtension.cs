@@ -1,12 +1,13 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Codexus.Base1200.Plugin.Event;
-using Codexus.Development.SDK.Connection;
+using Codexus.Base1200.Plugin.Packet.Play.Client.Configuration;
 using Codexus.Development.SDK.Enums;
 using Codexus.Development.SDK.Manager;
 using Codexus.Development.SDK.Plugin;
 using Codexus.HeypixelExtension.entity;
-using Codexus.HeypixelExtension.protocol.packet;
+using Codexus.HeypixelExtension.protocol.events;
+using Codexus.HeypixelExtension.protocol.events.extensions;
 using Codexus.HeypixelExtension.protocol.packet.helper;
 using Codexus.HeypixelExtension.utils;
 using Serilog;
@@ -27,96 +28,101 @@ public class HeypixelExtension : IPlugin
 {
     public void OnInitialize()
     {
-        EventManager.Instance.RegisterHandler<EventPluginMessage>(
-            Base1200.Plugin.Base1200.PluginChannel,
-            context => HandlePluginMessageGeneric(context.Identifier, context.Payload, context.Connection));
+        EventManager.Instance.RegisterHandler<EventPluginMessage>(Base1200.Plugin.Base1200.PluginChannel, OnPluginMessage);
+        EventManager.Instance.RegisterHandler<EventPlayerSendCommand>("base_1200_extra", OnPlaySendCommand);
     }
 
-    private static void HandlePluginMessageGeneric(string identifier, byte[] payload, GameConnection connection)
+    public static void OnPluginMessage(EventPluginMessage e)
     {
-        if (connection.State != EnumConnectionState.Play) return;
-        if (identifier != "floodgate:form" || payload.Length <= 3) return;
+        if (e.Connection.State != EnumConnectionState.Play) return;
+        if (e.Identifier != "floodgate:form" || e.Payload.Length <= 3) return;
         
-        var raw = Encoding.UTF8.GetString(payload, 3, payload.Length - 3);
-            
-        var windowRaw = new byte[2];
-        windowRaw[0] = payload[1];
-        windowRaw[1] = payload[2];
-        var windowId = FloodgateFormId.GetFormId(windowRaw);
+        var windowId = FloodgateFormId.GetFormIdFromPayloadRaw(e.Payload);
+        var raw = Encoding.UTF8.GetString(e.Payload, 3, e.Payload.Length - 3);
             
         Log.Debug("Id: {0} Detail: {1}", windowId, raw);
-        switch (payload[0])
+        switch (e.Payload[0])
         {
             case 0x00:
                 var form = JsonSerializer.Deserialize<Form>(raw)!;
             
-                connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
-                {
-                    Content = MessageBuilder.Builder()
+                e.SendMessageToClient(
+                    MessageBuilder.Builder()
                         .Text("§7>§r " + form.Title)
                         .OnHover(OnHover.ShowText("§7容器序号: §b" + windowId))
-                        .Build(),
-                    Overlay = false
-                });
-                connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
-                {
-                    Content = MessageBuilder.Builder().Text(form.Content).Build(),
-                    Overlay = false
-                });
+                        .Build()
+                );
+                e.SendMessageToClient(
+                    MessageBuilder.Builder()
+                        .Text(form.Content)
+                        .Build()
+                );
                     
                 for (var i = 0; i < form.Buttons.Count; i++)
                 {
                     var button = form.Buttons[i];
 
-                    connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
-                    {
-                        Content = MessageBuilder.Builder()
+                    e.SendMessageToClient(
+                        MessageBuilder.Builder()
                             .Text("§7[" + button.Text.Replace("§l", "").Replace("\n", " ") + "§7]")
                             .OnHover(OnHover.ShowText("§7点击执行选项: §b" + i))
                             .OnClick(OnClick.RunCommand("/floodgate:click " + windowId + " " + i))
-                            .Build(),
-                        Overlay = false
-                    });
+                            .Build()
+                    );
                 }
                 break;
             case 0x01:
                 var modal = JsonSerializer.Deserialize<Modal>(raw)!;
             
-                connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
-                {
-                    Content = MessageBuilder.Builder()
+                e.SendMessageToClient(
+                    MessageBuilder.Builder()
                         .Text("§7>§r " + modal.Title)
                         .OnHover(OnHover.ShowText("§7容器序号: §b" + windowId))
-                        .Build(),
-                    Overlay = false
-                });
-                connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
-                {
-                    Content = MessageBuilder.Builder().Text(modal.Content).Build(),
-                    Overlay = false
-                });
-
-                connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
-                {
-                    Content = MessageBuilder.Builder()
+                        .Build()
+                );
+                e.SendMessageToClient(
+                    MessageBuilder.Builder()
+                        .Text(modal.Content)
+                        .Build()
+                );
+                e.SendMessageToClient(
+                    MessageBuilder.Builder()
                         .Text("§7[" + modal.Button1.Replace("§l", "").Replace("\n", " ") + "§7]")
                         .OnHover(OnHover.ShowText("§7点击执行选项: §a是"))
                         .OnClick(OnClick.RunCommand("/floodgate:click " + windowId + " true"))
-                        .Build(),
-                    Overlay = false
-                });
-                
-                connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
-                {
-                    Content = MessageBuilder.Builder()
+                        .Build()
+                );
+                e.SendMessageToClient(
+                    MessageBuilder.Builder()
                         .Text("§7[" + modal.Button2.Replace("§l", "").Replace("\n", " ") + "§7]")
                         .OnHover(OnHover.ShowText("§7点击执行选项: §a否"))
                         .OnClick(OnClick.RunCommand("/floodgate:click " + windowId + " false"))
-                        .Build(),
-                    Overlay = false
-                });
+                        .Build()
+                );
                 break;
         }
+    }
+
+    public static void OnPlaySendCommand(EventPlayerSendCommand e)
+    {
+        if (!e.Command.StartsWith("floodgate:click ")) return;
+        e.Cancel();
+        
+        var param = e.Command.Replace("floodgate:click", "").Trim().Split(" ");
+        if (param.Length != 2)
+        {
+            e.SendMessageToClient(MessageBuilder.Builder().Text("§c无效的命令格式").Build());
+            return;
+        }
+
+        e.Connection.ServerChannel!.WriteAndFlushAsync(new CPacketPluginMessage
+        {
+            Identifier = "floodgate:form",
+            Payload = FloodgateFormId.ToFormId(short.Parse(param[0]))
+                .Concat(Encoding.UTF8.GetBytes(param[1]))
+                .ToArray()
+        });
+        e.SendMessageToClient(MessageBuilder.Builder().Text("§a执行成功").Build());
     }
 
 }
