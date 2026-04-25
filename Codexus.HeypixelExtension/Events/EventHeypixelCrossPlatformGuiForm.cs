@@ -1,5 +1,5 @@
 using System.Text;
-using Codexus.Base1200.Plugin.Packet.Play.Client.Configuration;
+using Codexus.Base1200.Plugin.Packet.Play.Client;
 using Codexus.Development.SDK.Connection;
 using Codexus.Development.SDK.Manager;
 using Codexus.HeypixelExtension.Entity;

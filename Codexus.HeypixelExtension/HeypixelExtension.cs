@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Codexus.Base1200.Plugin.Event;
-using Codexus.Base1200.Plugin.Packet.Play.Client.Configuration;
+using Codexus.Base1200.Plugin.Packet.Play.Client;
 using Codexus.Development.SDK.Enums;
 using Codexus.Development.SDK.Manager;
 using Codexus.Development.SDK.Plugin;
