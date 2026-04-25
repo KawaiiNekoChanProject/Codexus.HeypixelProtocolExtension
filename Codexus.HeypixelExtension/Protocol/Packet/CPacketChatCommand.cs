@@ -34,7 +34,7 @@ public class CPacketChatCommand : IPacket
         EventManager.Instance.TriggerEvent("base_1200_extra", e);
         Command = e.Command;
         
-        return Command.Length != 0;
+        return e.IsCancelled || Command.Length == 0;
     }
 
 }
