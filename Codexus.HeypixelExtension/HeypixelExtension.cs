@@ -69,6 +69,7 @@ public class HeypixelExtension : IPlugin
                     {
                         Content = ComponentHelper.TextClick(
                             "§7[" + button.Text.Replace("§l", "").Replace("\n", " ") + "§7]", 
+                            "§7点击执行选项: §b" + i,
                             "/floodgate:click " + windowId + " " + i
                         ),
                         Overlay = false
@@ -94,6 +95,7 @@ public class HeypixelExtension : IPlugin
                 {
                     Content = ComponentHelper.TextClick(
                         "§7[" + modal.Button1.Replace("§l", "").Replace("\n", " ") + "§7]", 
+                        "§7点击执行选项: §a是",
                         "/floodgate:click " + windowId + " true"
                     ),
                     Overlay = false
@@ -103,6 +105,7 @@ public class HeypixelExtension : IPlugin
                 {
                     Content = ComponentHelper.TextClick(
                         "§7[" + modal.Button2.Replace("§l", "").Replace("\n", " ") + "§7]", 
+                        "§7点击执行选项: §c否",
                         "/floodgate:click " + windowId + " false"
                     ),
                     Overlay = false
