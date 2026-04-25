@@ -1,8 +1,8 @@
 using Codexus.Development.SDK.Manager;
-using Codexus.HeypixelExtension.protocol.nbt.field;
-using Codexus.HeypixelExtension.protocol.packet;
+using Codexus.HeypixelExtension.Protocol.Nbt.Field;
+using Codexus.HeypixelExtension.Protocol.Packet;
 
-namespace Codexus.HeypixelExtension.protocol.events.extensions;
+namespace Codexus.HeypixelExtension.Protocol.Events.Extensions;
 
 public static class EventArgsBaseExtensions
 {

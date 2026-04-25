@@ -6,7 +6,7 @@ using Codexus.Development.SDK.Packet;
 using Codexus.HeypixelExtension.protocol.events;
 using DotNetty.Buffers;
 
-namespace Codexus.HeypixelExtension.protocol.packet;
+namespace Codexus.HeypixelExtension.Protocol.Packet;
 
 [RegisterPacket(EnumConnectionState.Play, EnumPacketDirection.ServerBound, [13, 4], [EnumProtocolVersion.V1200, EnumProtocolVersion.V1206 ])]
 public class CPacketChatCommand : IPacket

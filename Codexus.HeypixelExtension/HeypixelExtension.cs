@@ -6,10 +6,11 @@ using Codexus.Development.SDK.Enums;
 using Codexus.Development.SDK.Manager;
 using Codexus.Development.SDK.Plugin;
 using Codexus.HeypixelExtension.entity;
-using Codexus.HeypixelExtension.protocol.events;
-using Codexus.HeypixelExtension.protocol.events.extensions;
-using Codexus.HeypixelExtension.protocol.packet.helper;
-using Codexus.HeypixelExtension.utils;
+using Codexus.HeypixelExtension.Entity;
+using Codexus.HeypixelExtension.Protocol.Events;
+using Codexus.HeypixelExtension.Protocol.Events.Extensions;
+using Codexus.HeypixelExtension.Protocol.Packet.Message;
+using Codexus.HeypixelExtension.Utils;
 using Serilog;
 
 namespace Codexus.HeypixelExtension;

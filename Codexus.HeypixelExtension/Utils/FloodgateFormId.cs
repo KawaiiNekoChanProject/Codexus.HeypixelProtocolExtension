@@ -1,4 +1,4 @@
-namespace Codexus.HeypixelExtension.utils;
+namespace Codexus.HeypixelExtension.Utils;
 
 public static class FloodgateFormId
 {

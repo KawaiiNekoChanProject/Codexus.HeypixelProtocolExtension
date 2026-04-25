@@ -1,6 +1,6 @@
-using Codexus.HeypixelExtension.protocol.nbt.field;
+using Codexus.HeypixelExtension.Protocol.Nbt.Field;
 
-namespace Codexus.HeypixelExtension.protocol.packet.helper;
+namespace Codexus.HeypixelExtension.Protocol.Packet.Message;
 
 public record OnHover(string Action, NbtAny Value)
 {
