@@ -1,11 +1,11 @@
 ﻿using Codexus.Development.SDK.Connection;
 using Codexus.Development.SDK.Enums;
 using Codexus.Development.SDK.Packet;
-using Codexus.HeypixelExtension.protocol.nbt;
-using Codexus.HeypixelExtension.protocol.nbt.field;
+using Codexus.HeypixelExtension.Protocol.Nbt;
+using Codexus.HeypixelExtension.Protocol.Nbt.Field;
 using DotNetty.Buffers;
 
-namespace Codexus.HeypixelExtension.protocol.packet;
+namespace Codexus.HeypixelExtension.Protocol.Packet;
 
 [RegisterPacket(EnumConnectionState.Play, EnumPacketDirection.ClientBound, [104, 108], [EnumProtocolVersion.V1200, EnumProtocolVersion.V1206 ])]
 public class SPacketChatMessageSystem : IPacket

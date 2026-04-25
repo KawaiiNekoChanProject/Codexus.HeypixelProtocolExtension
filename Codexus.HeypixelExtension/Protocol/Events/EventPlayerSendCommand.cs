@@ -1,7 +1,7 @@
 using Codexus.Development.SDK.Connection;
 using Codexus.Development.SDK.Manager;
 
-namespace Codexus.HeypixelExtension.protocol.events;
+namespace Codexus.HeypixelExtension.Protocol.Events;
 
 public class EventPlayerSendCommand(GameConnection connection) : EventArgsBase(connection)
 {

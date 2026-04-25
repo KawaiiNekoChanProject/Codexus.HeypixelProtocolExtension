@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Codexus.HeypixelExtension.entity;
+namespace Codexus.HeypixelExtension.Entity;
 
 public class Modal
 {

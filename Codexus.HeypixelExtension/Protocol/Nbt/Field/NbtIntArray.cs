@@ -1,4 +1,4 @@
-namespace Codexus.HeypixelExtension.protocol.nbt.field;
+namespace Codexus.HeypixelExtension.Protocol.Nbt.Field;
 
 public record NbtIntArray(int[] Members) : NbtAny(11)
 {

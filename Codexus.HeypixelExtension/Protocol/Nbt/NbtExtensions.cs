@@ -1,9 +1,8 @@
 using System.Text;
-using Codexus.HeypixelExtension.protocol.nbt.field;
+using Codexus.HeypixelExtension.Protocol.Nbt.Field;
 using DotNetty.Buffers;
-using Serilog;
 
-namespace Codexus.HeypixelExtension.protocol.nbt;
+namespace Codexus.HeypixelExtension.Protocol.Nbt;
 
 public static class NbtExtensions
 {
