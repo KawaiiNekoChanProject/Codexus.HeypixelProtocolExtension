@@ -7,7 +7,7 @@ using DotNetty.Buffers;
 
 namespace Codexus.HeypixelExtension.Protocol.Packet;
 
-[RegisterPacket(EnumConnectionState.Play, EnumPacketDirection.ClientBound, [104, 108], [EnumProtocolVersion.V1200, EnumProtocolVersion.V1206 ])]
+[RegisterPacket(EnumConnectionState.Play, EnumPacketDirection.ClientBound, 108, [EnumProtocolVersion.V1200, EnumProtocolVersion.V1206 ])]
 public class SPacketChatMessageSystem : IPacket
 {
     public NbtAny Content { get; set; } = new(0);
