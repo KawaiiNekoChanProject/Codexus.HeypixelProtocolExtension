@@ -4,6 +4,7 @@ using Codexus.Development.SDK.Connection;
 using Codexus.Development.SDK.Enums;
 using Codexus.Development.SDK.Extensions;
 using Codexus.Development.SDK.Packet;
+using Codexus.HeypixelExtension.protocol.packet.helper;
 using Codexus.HeypixelExtension.utils;
 using DotNetty.Buffers;
 
@@ -35,7 +36,7 @@ public class CPacketChatMessageSystem : IPacket
         
         connection.ClientChannel.WriteAndFlushAsync(new SPacketChatMessageSystem
         {
-            Content = ComponentHelper.Text("§a执行成功"),
+            Content = MessageBuilder.Builder().Text("§a执行成功").Build(),
             Overlay = false
         });
         connection.ServerChannel!.WriteAndFlushAsync(new CPacketPluginMessage
