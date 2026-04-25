@@ -19,7 +19,7 @@ namespace Codexus.HeypixelExtension;
     "Heypixel Protocol Extension",
     "Unofficial Heypixel Protocol Extension!",
     "NekoCurit",
-    "0.0.2",
+    "0.0.3",
     [
         "36D701B3-6E98-3E92-AF53-C4EC327B3A71",
     ])
