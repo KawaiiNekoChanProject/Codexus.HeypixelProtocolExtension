@@ -53,11 +53,7 @@ public class HeypixelExtension : IPlugin
                         .OnHover(OnHover.ShowText("§7容器序号: §b" + windowId))
                         .Build()
                 );
-                e.SendMessageToClient(
-                    MessageBuilder.Builder()
-                        .Text(form.Content)
-                        .Build()
-                );
+                e.SendMessageToClient(form.Content);
                     
                 for (var i = 0; i < form.Buttons.Count; i++)
                 {
@@ -81,11 +77,7 @@ public class HeypixelExtension : IPlugin
                         .OnHover(OnHover.ShowText("§7容器序号: §b" + windowId))
                         .Build()
                 );
-                e.SendMessageToClient(
-                    MessageBuilder.Builder()
-                        .Text(modal.Content)
-                        .Build()
-                );
+                e.SendMessageToClient(modal.Content);
                 e.SendMessageToClient(
                     MessageBuilder.Builder()
                         .Text("§7[" + modal.Button1.Replace("§l", "").Replace("\n", " ") + "§7]")
@@ -112,7 +104,7 @@ public class HeypixelExtension : IPlugin
         var param = e.Command.Replace("floodgate:click", "").Trim().Split(" ");
         if (param.Length != 2)
         {
-            e.SendMessageToClient(MessageBuilder.Builder().Text("§c无效的命令格式").Build());
+            e.SendMessageToClient("§c无效的命令格式");
             return;
         }
 
@@ -123,7 +115,7 @@ public class HeypixelExtension : IPlugin
                 .Concat(Encoding.UTF8.GetBytes(param[1]))
                 .ToArray()
         });
-        e.SendMessageToClient(MessageBuilder.Builder().Text("§a执行成功").Build());
+        e.SendMessageToClient("§a执行成功");
     }
 
 }
