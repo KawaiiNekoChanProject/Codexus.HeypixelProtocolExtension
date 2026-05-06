@@ -1,4 +1,8 @@
 # Codexus.HeypixelProtocolExtension
+
+> [!WARNING]
+> 由于 Codexus 已停止运营改插件将不会再进行任何更新
+
 Heypixel 协议扩展
 
 增加对部分信息框处理
