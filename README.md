@@ -1,7 +1,9 @@
 # Codexus.HeypixelProtocolExtension
 
 > [!WARNING]
-> 由于 Codexus 已停止运营改插件将不会再进行任何更新
+> 由于 Codexus 已停止运营 插件将不会再进行任何更新
+>
+> 感谢各位使用者们的陪伴
 
 Heypixel 协议扩展
 
@@ -20,6 +22,16 @@ Heypixel 协议扩展
 1.从可靠来源获取插件
 
 2.放入 `plugins` 目录
+
+# 参考项目
+
+本项目参考了以下项目的部分代码
+
+https://github.com/denetease/Codexus.OpenSDK
+
+https://github.com/GeyserMC/Floodgate
+
+https://github.com/GeyserMC/MCProtocolLib/tree/1.20.6-1
 
 
 > [!WARNING]
